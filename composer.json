@@ -1,0 +1,18 @@
+{
+    "name": "plugowski/currency_converter",
+    "require-dev": {
+        "phpunit/phpunit": "4.8.9"
+    },
+    "authors": [
+        {
+            "name": "Paweł Ługowski",
+            "email": "pawelugowski@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "CurrencyConverter\\": "src/"
+        }
+    }
+}
