@@ -10,7 +10,7 @@ namespace CurrencyConverter;
 class Money
 {
     /**
-     * @var double
+     * @var float
      */
     private $value;
     /**
@@ -20,12 +20,17 @@ class Money
 
     /**
      * Money constructor.
-     * @param double $value
+     * @param float $value
      * @param Currency $currency
+     * @throws MoneyValueException
      */
     public function __construct($value, Currency $currency)
     {
-        $this->value = $value;
+        if (!is_numeric($value)) {
+            throw new MoneyValueException();
+        }
+
+        $this->value = (float)$value;
         $this->currency = $currency;
     }
 
@@ -40,7 +45,7 @@ class Money
     }
 
     /**
-     * @return double
+     * @return float
      */
     public function getValue()
     {
@@ -53,16 +58,5 @@ class Money
     public function getCurrency()
     {
         return $this->currency;
-    }
-
-    /**
-     * @param int $decimals
-     * @param string $decimalSeparator
-     * @param string $thousandSeparator
-     * @return string
-     */
-    public function getFormattedValue($decimals = 2, $decimalSeparator = '.', $thousandSeparator = ',')
-    {
-        return number_format($this->value, $decimals, $decimalSeparator, $thousandSeparator);
     }
 }

@@ -1,4 +1,4 @@
-# CurrencyConverter ![alt text](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg "Licence") ![alt text](https://img.shields.io/badge/tests-19%20%2F%2019-brightgreen.svg "Tests") ![alt text](https://img.shields.io/badge/coverage-100%25-green.svg "Coverage")
+# CurrencyConverter ![alt text](https://img.shields.io/badge/licence-BSD--3--Clause-blue.svg "Licence") ![alt text](https://img.shields.io/badge/tests-10%20%2F%2010-brightgreen.svg "Tests") ![alt text](https://img.shields.io/badge/coverage-100%25-green.svg "Coverage")
 Currency converter with service to get latest currencies from NBP (Narodowy Bank Polski) and ECB (European Central Bank).
 
 ## Installation

@@ -6,9 +6,8 @@ use CurrencyConverter\Currency;
 use CurrencyConverter\ExchangeRate;
 use CurrencyConverter\ExchangeRateCollection;
 use CurrencyConverter\ExchangeRateNotFoundException;
-use CurrencyConverter\ExchangeRepository\NBPRatesRepository;
-use CurrencyConverter\ExchangeService;
 use CurrencyConverter\Money;
+use CurrencyConverter\MoneyValueException;
 
 /**
  * Class CurrencyTest
@@ -18,18 +17,6 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
 {
     const RATE_EUR = 4.2693;
     const RATE_PLN = 1;
-
-    /**
-     * @test
-     */
-    public function shouldReturnFormattedMoneyValue()
-    {
-        /** @var Money $money */
-        /** @noinspection PhpUndefinedMethodInspection */
-        $money = Money::PLN(10);
-
-        self::assertEquals('10,00', $money->getFormattedValue(2, ',', ''));
-    }
 
     /**
      * @test
@@ -47,6 +34,16 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(Money::class, $money);
         self::assertEquals(5, $money->getValue());
         self::assertEquals('PLN', $money->getCurrency()->getCode());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldThrowWrongValueExcepton()
+    {
+        $this->setExpectedException(MoneyValueException::class);
+        /** @noinspection PhpUndefinedMethodInspection */
+        Money::PLN('dziesiec');
     }
 
     /**
@@ -78,6 +75,5 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
         $rateCollection->add(new ExchangeRate('PLN', self::RATE_PLN));
         $rateCollection->add(new ExchangeRate('EUR', self::RATE_EUR));
         (new Converter($rateCollection))->findExchangeRate('USD');
-
     }
 }

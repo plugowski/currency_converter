@@ -28,7 +28,7 @@ class ECBRatesRepository implements ExchangeRepository
 
         foreach ($xml->Cube->Cube->Cube as $rate) {
             // Rate based on EUR should say how many EUR is in specified Currency, ECB return information how many
-            // Currency units are in 1 EUR, so we have to convert that
+            // Currency units are in 1 EUR, so we have to inverse that
             $exchangeRateCollection->add(new ExchangeRate((string)$rate['currency'], 1 / (double)$rate['rate']));
         }
 
