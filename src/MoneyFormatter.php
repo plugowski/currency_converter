@@ -82,48 +82,44 @@ class MoneyFormatter
         return number_format($this->money->getValue(), $decimals, $decimalSeparator, $thousandSeparator);
     }
 
+    /**
+     * @return string
+     */
     public function price()
     {
-        return $this->unitValue . $this->currencyDictionary->getUnitSign() . ' '
-            . $this->floatValue . $this->currencyDictionary->getFloatSign();
+        return sprintf($this->currencyDictionary->getMoneyFormat(), $this->unitValue, $this->floatValue);
     }
 
     /**
+     * @param bool $spellFloats
+     * @param bool $forceZeros
      * @return string
      */
-    public function spell()
+    public function spell($spellFloats = true, $forceZeros = false)
     {
-        list($unit, $unitName, $float, $floatName) = [
-            $this->getUnit(),
+        return vsprintf('%s %s%s', [
+            $this->numberSpeller->verbally($this->unitValue),
             $this->numberSpeller->variety($this->unitValue, $this->currencyDictionary->getUnitNames()),
-            $this->getFloats(),
-            $this->numberSpeller->variety($this->unitValue, $this->currencyDictionary->getFloatNames())
-        ];
-
-        return sprintf('%s %s %s %s', $unit, $unitName, $float, $floatName);
+            $this->floats($spellFloats, $forceZeros)
+        ]);
     }
 
     /**
+     * @param $spellFloats
+     * @param $forceZeros
      * @return string
      */
-    private function getUnit()
+    private function floats($spellFloats, $forceZeros)
     {
-        return $this->numberSpeller->verbally($this->unitValue);
-    }
-
-    /**
-     * @return string
-     */
-    private function getFloats()
-    {
-//        if (false === $this->withSpelledFloats && false === $this->withFloats || 0 == $this->floatValue) {
-//            return '';
-//        } else if (false === $this->withSpelledFloats) {
-//            return ' ' . $this->floatValue . '/100';
-//        }
-
-        return $this->numberSpeller->verbally($this->floatValue);
-//        return $this->floatConnector . $this->numberSpeller->verbally($this->floatValue);
+        if (0 === $this->floatValue && false === $forceZeros) {
+            $return = '';
+        } else if (true === $spellFloats) {
+            $return = ' ' . $this->numberSpeller->verbally($this->floatValue) . ' '
+                . $this->numberSpeller->variety($this->floatValue, $this->currencyDictionary->getFloatNames());
+        } else {
+            $return = ' ' . $this->floatValue . '/100';
+        }
+        return $return;
     }
 
     /**

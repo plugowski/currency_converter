@@ -1,10 +1,11 @@
 <?php
 namespace CurrencyConverterTest;
 
+use CurrencyConverter\Currency;
+use CurrencyConverter\CurrencyDictionaryMissingCurrencyException;
+use CurrencyConverter\CurrencyDictionaryNotFoundException;
 use CurrencyConverter\Money;
-use CurrencyConverter\MoneyFormatter;
 use CurrencyConverter\MoneyFormatterFactory;
-use CurrencyConverter\MoneyFormatterLocaleNotFoundException;
 
 /**
  * Class MoneyFormatterTest
@@ -17,61 +18,30 @@ class MoneyFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldThrowLocaleNotFoundException()
     {
-        $this->setExpectedException(MoneyFormatterLocaleNotFoundException::class);
+        $this->setExpectedException(CurrencyDictionaryNotFoundException::class);
         MoneyFormatterFactory::create('NON_EXISTS');
     }
 
     /**
      * @test
      */
-    public function shouldReturnFormattedMoneyValueByMoney()
+    public function shouldThrowMissingCurrencyInDictionaryException()
     {
-        $moneyFormatter = new MoneyFormatter();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $moneyFormatter->setMoney(Money::PLN(10));
-
-        self::assertEquals('10,00', $moneyFormatter->format(2, ',', ''));
+        $this->setExpectedException(CurrencyDictionaryMissingCurrencyException::class);
+        MoneyFormatterFactory::create('pl_PL')->setMoney(Money::AUD(10));
     }
 
     /**
      * @test
      */
-    public function shouldReturnFormattedMoneyValue()
-    {
-        $moneyFormatter = new MoneyFormatter();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $moneyFormatter->setValue('1 000,55', 'PLN');
-
-        self::assertEquals('1000.55', $moneyFormatter->format(2, '.', ''));
-    }
-
-    /**
-     * @test
-     */
-    public function shouldSpelloutMoney()
+    public function shouldSpellAmountWithCurrencyName()
     {
         $formatter = MoneyFormatterFactory::create('pl_PL');
-
         $test = [
-            1 => 'jeden',
-            2 => 'dwa',
-            5 => 'pięć',
-            10 => 'dziesięć',
-            13 => 'trzynaście',
-            20 => 'dwadzieścia',
-            22 => 'dwadzieścia dwa',
-            100 => 'sto',
-            101 => 'sto jeden',
-            200 => 'dwieście',
-            120 => 'sto dwadzieścia',
-            179 => 'sto siedemdziesiąt dziewięć',
-            212 => 'dwieście dwanaście',
-            279 => 'dwieście siedemdziesiąt dziewięć',
-            1000 => 'jeden tysiąc',
-            1001 => 'jeden tysiąc jeden',
-            1200 => 'jeden tysiąc dwieście',
-            4000 => 'cztery tysiące',
-            100200000 => 'sto milionów dwieście tysięcy'
+            '9.00' => 'dziewięć złotych',
+            '1.03' => 'jeden złoty trzy grosze',
+            '9.50' => 'dziewięć złotych pięćdziesiąt groszy',
+            '123.99' => 'sto dwadzieścia trzy złote dziewięćdziesiąt dziewięć groszy',
         ];
 
         foreach ($test as $value => $text) {
@@ -83,44 +53,87 @@ class MoneyFormatterTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function shouldSpellCurrencyWithFloatsAsString()
+    public function shouldSpellAmountWithForcedZeros()
     {
         $formatter = MoneyFormatterFactory::create('pl_PL');
         $test = [
-            '9.00' => 'dziewięć',
-            '9.50' => 'dziewięć, pięćdziesiąt',
-            '123.99' => 'sto dwadzieścia trzy, dziewięćdziesiąt dziewięć',
+            '1' => 'jeden złoty zero groszy',
+            '2' => 'dwa złote zero groszy',
+            '9.00' => 'dziewięć złotych zero groszy'
         ];
 
         foreach ($test as $value => $text) {
             /** @noinspection PhpUndefinedMethodInspection */
-            $verbally = $formatter->setMoney(Money::PLN($value))
-                ->withSpelledFloats()
-                ->spell();
-
-            self::assertEquals($text, $verbally);
+            self::assertEquals($text, $formatter->setMoney(Money::PLN($value))->spell(true, true));
         }
     }
 
     /**
      * @test
      */
-    public function shouldSpellCurrencyWithShortFloats()
+    public function shouldSpellAmountWithNumericalFloats()
     {
         $formatter = MoneyFormatterFactory::create('pl_PL');
         $test = [
-            '9.00' => 'dziewięć',
-            '9.50' => 'dziewięć 50/100',
-            '123.99' => 'sto dwadzieścia trzy 99/100',
+            '1.33' => 'jeden złoty 33/100',
+            '2.50' => 'dwa złote 50/100',
+            '9.99' => 'dziewięć złotych 99/100',
+            '10' => 'dziesięć złotych'
         ];
 
         foreach ($test as $value => $text) {
             /** @noinspection PhpUndefinedMethodInspection */
-            $verbally = $formatter->setMoney(Money::PLN($value))
-                ->withFloats()
-                ->spell();
+            self::assertEquals($text, $formatter->setMoney(Money::PLN($value))->spell(false));
+        }
+    }
 
-            self::assertEquals($text, $verbally);
+    /**
+     * @test
+     */
+    public function shouldSpellAmountInOtherCurrencies()
+    {
+        $formatter = MoneyFormatterFactory::create('pl_PL');
+        $test = [
+            'PLN' => [
+                '1' => 'jeden złoty',
+                '1.50' => 'jeden złoty pięćdziesiąt groszy'
+            ],
+            'EUR' => [
+                '2' => 'dwa euro',
+                '3.99' => 'trzy euro dziewięćdziesiąt dziewięć eurocentów'
+            ],
+            'USD' => [
+                '5' => 'pięć dolarów',
+                '10.01' => 'dziesięć dolarów jeden cent'
+            ]
+        ];
+
+        foreach ($test as $currency => $data) {
+            foreach ($data as $value => $text) {
+                /** @noinspection PhpUndefinedMethodInspection */
+                self::assertEquals($text, $formatter->setMoney(new Money($value, new Currency($currency)))->spell());
+            }
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnPriceFormatWithShortCurrencySigns()
+    {
+        $formatter = MoneyFormatterFactory::create('pl_PL');
+        $test = [
+            'USD' => ['1.33' => '$1.33', '1' => '$1.00'],
+            'PLN' => ['2.50' => '2zł 50gr', '1.01' => '1zł 1gr'],
+            'GBP' => ['9.99' => '£9.99'],
+            'EUR' => ['10' => '€10.00']
+        ];
+
+        foreach ($test as $currency => $data) {
+            foreach ($data as $value => $text) {
+                /** @noinspection PhpUndefinedMethodInspection */
+                self::assertEquals($text, $formatter->setMoney(new Money($value, new Currency($currency)))->price());
+            }
         }
     }
 }

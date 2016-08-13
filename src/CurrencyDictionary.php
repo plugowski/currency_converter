@@ -7,10 +7,12 @@ namespace CurrencyConverter;
  */
 abstract class CurrencyDictionary
 {
-    const UNIT_SIGN = 'unit_sign';
-    const FLOAT_SIGN = 'float_sign';
+    /**
+     * Consts for indexes in dictionaries
+     */
     const UNIT_NAMES = 'unit_names';
     const FLOAT_NAMES = 'float_names';
+    const MONEY_FORMAT = 'money_format';
 
     /**
      * @var array
@@ -22,11 +24,11 @@ abstract class CurrencyDictionary
     private $currency;
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getUnitSign()
+    public function getMoneyFormat()
     {
-        return $this->currencies[$this->currency][self::UNIT_SIGN];
+        return $this->currencies[$this->currency][self::MONEY_FORMAT];
     }
 
     /**
@@ -35,14 +37,6 @@ abstract class CurrencyDictionary
     public function getUnitNames()
     {
         return $this->currencies[$this->currency][self::UNIT_NAMES];
-    }
-
-    /**
-     * @return string
-     */
-    public function getFloatSign()
-    {
-        return $this->currencies[$this->currency][self::FLOAT_SIGN];
     }
 
     /**
@@ -55,11 +49,15 @@ abstract class CurrencyDictionary
 
     /**
      * @param string $currency
+     * @throws CurrencyDictionaryMissingCurrencyException
      */
     public function setCurrency($currency)
     {
         if (!array_key_exists($currency, $this->currencies)) {
-//            throw new CurrencyTranslationNotFound();
+            throw new CurrencyDictionaryMissingCurrencyException(
+                substr(get_class($this), strrpos(get_class($this), '\\')+1),
+                $currency
+            );
         }
 
         $this->currency = $currency;

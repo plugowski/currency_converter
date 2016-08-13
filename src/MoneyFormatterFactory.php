@@ -12,6 +12,7 @@ class MoneyFormatterFactory
     /**
      * @param string $locale
      * @return MoneyFormatter
+     * @throws CurrencyDictionaryNotFoundException
      */
     public static function create($locale)
     {
@@ -20,7 +21,7 @@ class MoneyFormatterFactory
                 $dictionary = new PolishCurrencyDictionary();
                 break;
             default:
-                // todo: throw exception dictionary not found
+                throw new CurrencyDictionaryNotFoundException($locale);
                 break;
         }
 

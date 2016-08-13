@@ -11,26 +11,22 @@ class PolishCurrencyDictionary extends CurrencyDictionary
 
     protected $currencies = [
         'PLN' => [
-            self::UNIT_SIGN => 'zł',
-            self::FLOAT_SIGN => 'gr',
+            self::MONEY_FORMAT => '%dzł %dgr',
             self::UNIT_NAMES => ['złoty', 'złote', 'złotych'],
             self::FLOAT_NAMES => ['grosz', 'grosze', 'groszy']
         ],
         'USD' => [
-            self::UNIT_SIGN => '$',
-            self::FLOAT_SIGN => '¢',
+            self::MONEY_FORMAT => '$%d.%02d',
             self::UNIT_NAMES => ['dolar', 'dolary', 'dolarów'],
             self::FLOAT_NAMES => ['cent', 'centy', 'centów']
         ],
         'EUR' => [
-            self::UNIT_SIGN => '€',
-            self::FLOAT_SIGN => '¢',
+            self::MONEY_FORMAT => '€%d.%02d',
             self::UNIT_NAMES => ['euro', 'euro', 'euro'],
             self::FLOAT_NAMES => ['eurocent', 'eurocenty', 'eurocentów']
         ],
         'GBP' => [
-            self::UNIT_SIGN => '£',
-            self::FLOAT_SIGN => 'd',
+            self::MONEY_FORMAT => '£%d.%02d',
             self::UNIT_NAMES => ['funt', 'funty', 'funtów'],
             self::FLOAT_NAMES => ['pens', 'pensy', 'pensów']
         ],
