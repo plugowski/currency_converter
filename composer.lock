@@ -4,9 +4,45 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "720f02d618c254d5cf602acb8d68690c",
-    "content-hash": "7c164d72d91c6d86a70df3ea71414909",
-    "packages": [],
+    "hash": "5b8229d721b7c8708912c6a4fdb1c79f",
+    "content-hash": "a12239c4f87684a9567f7810b11cd6f5",
+    "packages": [
+        {
+            "name": "plugowski/number_speller",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/plugowski/number_speller.git",
+                "reference": "9d6509aaafe5f5e00950d85e9a0b054b5a8de2c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/plugowski/number_speller/zipball/9d6509aaafe5f5e00950d85e9a0b054b5a8de2c2",
+                "reference": "9d6509aaafe5f5e00950d85e9a0b054b5a8de2c2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NumberSpeller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Paweł Ługowski",
+                    "email": "pawelugowski@gmail.com"
+                }
+            ],
+            "time": "2016-08-13 10:32:40"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",

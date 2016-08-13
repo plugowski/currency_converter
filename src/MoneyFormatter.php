@@ -1,6 +1,8 @@
 <?php
 namespace CurrencyConverter;
 
+use NumberSpeller\NumberSpeller;
+
 /**
  * Class MoneyFormatter
  * @package CurrencyConverter
@@ -23,6 +25,25 @@ class MoneyFormatter
      * @var int
      */
     protected $floatValue;
+    /**
+     * @var NumberSpeller
+     */
+    private $numberSpeller;
+    /**
+     * @var CurrencyDictionary
+     */
+    private $currencyDictionary;
+
+    /**
+     * MoneyFormatter constructor.
+     * @param NumberSpeller $numberSpeller
+     * @param CurrencyDictionary $currencyDictionary
+     */
+    public function __construct(NumberSpeller $numberSpeller, CurrencyDictionary $currencyDictionary)
+    {
+        $this->numberSpeller = $numberSpeller;
+        $this->currencyDictionary = $currencyDictionary;
+    }
 
     /**
      * @param Money $money
@@ -32,6 +53,7 @@ class MoneyFormatter
     {
         $this->money = $money;
         $this->setParsedValues($money->getValue());
+        $this->currencyDictionary->setCurrency($money->getCurrency()->getCode());
         return $this;
     }
 
@@ -45,6 +67,7 @@ class MoneyFormatter
         $convertedValue = $this->convertToFloat($value);
         $this->money = new Money($convertedValue, new Currency($currency));
         $this->setParsedValues($convertedValue);
+        $this->currencyDictionary->setCurrency($currency);
         return $this;
     }
 
@@ -57,6 +80,50 @@ class MoneyFormatter
     public function format($decimals = 2, $decimalSeparator = '.', $thousandSeparator = '')
     {
         return number_format($this->money->getValue(), $decimals, $decimalSeparator, $thousandSeparator);
+    }
+
+    public function price()
+    {
+        return $this->unitValue . $this->currencyDictionary->getUnitSign() . ' '
+            . $this->floatValue . $this->currencyDictionary->getFloatSign();
+    }
+
+    /**
+     * @return string
+     */
+    public function spell()
+    {
+        list($unit, $unitName, $float, $floatName) = [
+            $this->getUnit(),
+            $this->numberSpeller->variety($this->unitValue, $this->currencyDictionary->getUnitNames()),
+            $this->getFloats(),
+            $this->numberSpeller->variety($this->unitValue, $this->currencyDictionary->getFloatNames())
+        ];
+
+        return sprintf('%s %s %s %s', $unit, $unitName, $float, $floatName);
+    }
+
+    /**
+     * @return string
+     */
+    private function getUnit()
+    {
+        return $this->numberSpeller->verbally($this->unitValue);
+    }
+
+    /**
+     * @return string
+     */
+    private function getFloats()
+    {
+//        if (false === $this->withSpelledFloats && false === $this->withFloats || 0 == $this->floatValue) {
+//            return '';
+//        } else if (false === $this->withSpelledFloats) {
+//            return ' ' . $this->floatValue . '/100';
+//        }
+
+        return $this->numberSpeller->verbally($this->floatValue);
+//        return $this->floatConnector . $this->numberSpeller->verbally($this->floatValue);
     }
 
     /**
@@ -77,6 +144,8 @@ class MoneyFormatter
     private function setParsedValues($value)
     {
         $this->unsigned = (0 < $value);
-        list($this->unitValue, $this->floatValue) = explode('.', number_format(abs($value), 2, '.', ''));
+        list($this->unitValue, $this->floatValue) = array_map(function($el) {
+            return (int)$el;
+        }, explode('.', number_format(abs($value), 2, '.', '')));
     }
 }

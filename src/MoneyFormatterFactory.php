@@ -1,9 +1,7 @@
 <?php
 namespace CurrencyConverter;
 
-use CurrencyConverter\MoneyFormatterLocale\NumberFormatterNotFoundException;
-use CurrencyConverter\MoneyFormatterLocale\PeclFormatter;
-use CurrencyConverter\MoneyFormatterLocale\PolishFormatter;
+use NumberSpeller\NumberSpellerFactory;
 
 /**
  * Class MoneyFormatterFactory
@@ -13,34 +11,19 @@ class MoneyFormatterFactory
 {
     /**
      * @param string $locale
-     * @return MoneyFormatterLocale
+     * @return MoneyFormatter
      */
     public static function create($locale)
     {
-        try {
-            $formatter = new PeclFormatter($locale);
-        }  catch (NumberFormatterNotFoundException $e) {
-            $formatter = self::getFormatter($locale);
-        }
-        return $formatter;
-    }
-
-    /**
-     * @param string $locale
-     * @return PolishFormatter
-     * @throws MoneyFormatterLocaleNotFoundException
-     */
-    private static function getFormatter($locale)
-    {
         switch ($locale) {
-            case 'pl_PL' :
-            case 'pl' :
-                $formatter = new PolishFormatter();
+            case 'pl_PL':
+                $dictionary = new PolishCurrencyDictionary();
                 break;
-            default :
-                throw new MoneyFormatterLocaleNotFoundException($locale);
+            default:
+                // todo: throw exception dictionary not found
                 break;
         }
-        return $formatter;
+
+        return new MoneyFormatter(NumberSpellerFactory::create($locale), $dictionary);
     }
 }
