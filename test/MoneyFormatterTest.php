@@ -28,7 +28,33 @@ class MoneyFormatterTest extends \PHPUnit_Framework_TestCase
     public function shouldThrowMissingCurrencyInDictionaryException()
     {
         $this->setExpectedException(CurrencyDictionaryMissingCurrencyException::class);
+        /** @noinspection PhpUndefinedMethodInspection */
         MoneyFormatterFactory::create('pl_PL')->setMoney(Money::AUD(10));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSpellByValueAndCurrencyCode()
+    {
+        $formatter = MoneyFormatterFactory::create('pl_PL');
+        $test = [
+            '25.02' => 'dwadzieścia pięć dolarów dwa centy',
+            '10,50' => 'dziesięć dolarów pięćdziesiąt centów',
+        ];
+
+        foreach ($test as $value => $text) {
+            self::assertEquals($text, $formatter->setValue($value, 'USD')->spell());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function shouldFormatMoneyUsingNumberFormat()
+    {
+        $formatter = MoneyFormatterFactory::create('pl_PL');
+        self::assertEquals('10 000,00', $formatter->setValue(10000, 'USD')->format(2, ',', ' '));
     }
 
     /**
