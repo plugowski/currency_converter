@@ -18,14 +18,14 @@ Basic usage looks like code below:
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-$money = new CurrencyConverter\Money(1, new CurrencyConverter\Currency('EUR'));
+$money = new CurrencyConverter\Money\Money(1, new CurrencyConverter\Currency\Currency('EUR'));
 
-$rateCollection =  new \CurrencyConverter\ExchangeRateCollection();
-$rateCollection->add(new \CurrencyConverter\ExchangeRate('EUR', 4.2636));
-$rateCollection->add(new \CurrencyConverter\ExchangeRate('PLN', 1.0000));
+$rateCollection =  new \CurrencyConverter\Exchange\RateCollection();
+$rateCollection->add(new \CurrencyConverter\Exchange\Rate('EUR', 4.2636));
+$rateCollection->add(new \CurrencyConverter\Exchange\Rate('PLN', 1.0000));
 
 $converter = new CurrencyConverter\Converter($rateCollection);
-$converted = $converter->exchange($money, new CurrencyConverter\Currency('PLN'));
+$converted = $converter->exchange($money, new CurrencyConverter\Currency\Currency('PLN'));
 
 // how many PLN are in 1 EUR
 echo $converted->getValue();
@@ -44,8 +44,8 @@ Service usage:
 
 ```php
 <?php
-$exchangeService = new CurrencyConverter\ExchangeService(new CurrencyConverter\ExchangeRepository\NBPRatesRepository());
-$converted = $exchangeService->convert(CurrencyConverter\Money::EUR(4), new CurrencyConverter\Currency('PLN'));
+$exchangeService = new CurrencyConverter\Exchange\Service(new CurrencyConverter\Exchange\Repository\NBPRatesRepository());
+$converted = $exchangeService->convert(CurrencyConverter\Money\Money::EUR(4), new CurrencyConverter\Currency('PLN'));
 ```
 
 ## MoneyFormatter
@@ -54,8 +54,8 @@ For some cases we need show money value as spelled string like. For that case yo
 
 ```php
 <?php
-$formatter = \CurrencyConverter\MoneyFormatterFactory::create('pl_PL');
-$formatter->setMoney(Money::PLN(20.99));
+$formatter = \CurrencyConverter\Money\FormatterFactory::create('pl_PL');
+$formatter->setMoney(\CurrencyConverter\Money\Money::PLN(20.99));
 
 echo $formatter->spell(); // will return: dwadzieścia złotych dziewięćdziesiąt dziewięć groszy
 ```
