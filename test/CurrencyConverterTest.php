@@ -2,12 +2,12 @@
 namespace CurrencyConverterTest;
 
 use CurrencyConverter\Converter;
-use CurrencyConverter\Currency;
-use CurrencyConverter\ExchangeRate;
-use CurrencyConverter\ExchangeRateCollection;
-use CurrencyConverter\ExchangeRateNotFoundException;
-use CurrencyConverter\Money;
-use CurrencyConverter\MoneyValueException;
+use CurrencyConverter\Currency\Currency;
+use CurrencyConverter\Exchange\Rate;
+use CurrencyConverter\Exchange\RateCollection;
+use CurrencyConverter\Exchange\RateNotFoundException;
+use CurrencyConverter\Money\Money;
+use CurrencyConverter\Money\InvalidValueException;
 
 /**
  * Class CurrencyTest
@@ -41,7 +41,7 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldThrowWrongValueExcepton()
     {
-        $this->setExpectedException(MoneyValueException::class);
+        $this->setExpectedException(InvalidValueException::class);
         /** @noinspection PhpUndefinedMethodInspection */
         Money::PLN('dziesiec');
     }
@@ -54,9 +54,9 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $money = Money::EUR(1);
 
-        $rateCollection = new ExchangeRateCollection();
-        $rateCollection->add(new ExchangeRate('PLN', self::RATE_PLN));
-        $rateCollection->add(new ExchangeRate('EUR', self::RATE_EUR));
+        $rateCollection = new RateCollection();
+        $rateCollection->add(new Rate('PLN', self::RATE_PLN));
+        $rateCollection->add(new Rate('EUR', self::RATE_EUR));
 
         $converter = new Converter($rateCollection);
         $converted = $converter->exchange($money, new Currency('PLN'));
@@ -69,11 +69,11 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldThrowExchangeRateNotFoundException()
     {
-        $this->setExpectedException(ExchangeRateNotFoundException::class);
+        $this->setExpectedException(RateNotFoundException::class);
 
-        $rateCollection = new ExchangeRateCollection();
-        $rateCollection->add(new ExchangeRate('PLN', self::RATE_PLN));
-        $rateCollection->add(new ExchangeRate('EUR', self::RATE_EUR));
+        $rateCollection = new RateCollection();
+        $rateCollection->add(new Rate('PLN', self::RATE_PLN));
+        $rateCollection->add(new Rate('EUR', self::RATE_EUR));
         (new Converter($rateCollection))->findExchangeRate('USD');
     }
 }

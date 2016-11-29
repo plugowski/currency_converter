@@ -1,9 +1,9 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Currency;
 
 /**
  * Class CurrencyDictionaryMissingCurrencyException
- * @package CurrencyConverter
+ * @package CurrencyConverter\Currency
  */
 class CurrencyDictionaryMissingCurrencyException extends \Exception
 {

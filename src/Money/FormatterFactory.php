@@ -1,17 +1,19 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Money;
 
+use CurrencyConverter\Currency\CurrencyDictionaryNotFoundException;
+use CurrencyConverter\Currency\PolishCurrencyDictionary;
 use NumberSpeller\NumberSpellerFactory;
 
 /**
- * Class MoneyFormatterFactory
+ * Class FormatterFactory
  * @package CurrencyConverter
  */
-class MoneyFormatterFactory
+class FormatterFactory
 {
     /**
      * @param string $locale
-     * @return MoneyFormatter
+     * @return Formatter
      * @throws CurrencyDictionaryNotFoundException
      */
     public static function create($locale)
@@ -25,6 +27,6 @@ class MoneyFormatterFactory
                 break;
         }
 
-        return new MoneyFormatter(NumberSpellerFactory::create($locale), $dictionary);
+        return new Formatter(NumberSpellerFactory::create($locale), $dictionary);
     }
 }

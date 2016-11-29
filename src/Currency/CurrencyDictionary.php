@@ -1,9 +1,9 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Currency;
 
 /**
  * Class CurrencyDictionary
- * @package CurrencyConverter
+ * @package CurrencyConverter\Currency
  */
 abstract class CurrencyDictionary
 {

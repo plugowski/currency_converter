@@ -1,11 +1,13 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Money;
+
+use CurrencyConverter\Currency\Currency;
 
 /**
  * Value Object Money
  *
  * Class Money
- * @package CurrencyConverter
+ * @package CurrencyConverter\Money
  */
 class Money
 {
@@ -22,12 +24,12 @@ class Money
      * Money constructor.
      * @param float $value
      * @param Currency $currency
-     * @throws MoneyValueException
+     * @throws InvalidValueException
      */
     public function __construct($value, Currency $currency)
     {
         if (!is_numeric($value)) {
-            throw new MoneyValueException();
+            throw new InvalidValueException();
         }
 
         $this->value = (float)$value;

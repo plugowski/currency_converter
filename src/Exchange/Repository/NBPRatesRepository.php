@@ -1,38 +1,40 @@
 <?php
-namespace CurrencyConverter\ExchangeRepository;
+namespace CurrencyConverter\Exchange\Repository;
 
-use CurrencyConverter\ExchangeRate;
-use CurrencyConverter\ExchangeRateCollection;
-use CurrencyConverter\ExchangeRepository;
+use CurrencyConverter\Exchange\Rate;
+use CurrencyConverter\Exchange\RateCollection;
+use CurrencyConverter\Exchange\Repository;
 
 /**
  * Narodowy Bank Polski
  *
  * Class NBPExchangeRepository
- * @package CurrencyConverter
+ * @package CurrencyConverter\Exchange\Repository
  */
-class NBPRatesRepository implements ExchangeRepository
+class NBPRatesRepository implements Repository
 {
     /**
      * Adresy oraz endpointy do API
      */
     const API_URL = 'http://api.nbp.pl/api/';
     const EXCHANGE_RATES_URL = 'exchangerates/';
+    const EXCHANGE_TABLES = 'tables/';
+    const EXCHANGE_RATES = 'rates/';
 
     /**
-     * @return ExchangeRateCollection | ExchangeRate[]
+     * @return RateCollection | Rate[]
      */
     public function getExchangeRates()
     {
         $response = $this->call(self::EXCHANGE_RATES_URL . 'tables/A');
 
-        $exchangeRateCollection = new ExchangeRateCollection();
+        $exchangeRateCollection = new RateCollection();
         // PLN is a base for all currencies, so exchange rate for PLN is 1:1
-        $exchangeRateCollection->add(new ExchangeRate('PLN', 1.0000));
+        $exchangeRateCollection->add(new Rate('PLN', 1.0000));
 
         if (!empty($response[0]['rates'])) {
             foreach ($response[0]['rates'] as $rate) {
-                $exchangeRateCollection->add(new ExchangeRate($rate['code'], $rate['mid']));
+                $exchangeRateCollection->add(new Rate($rate['code'], $rate['mid']));
             }
         }
 

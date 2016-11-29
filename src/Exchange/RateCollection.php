@@ -1,21 +1,21 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Exchange;
 
 /**
- * Class ExchangeRateCollection
- * @package CurrencyConverter
+ * Class Collection
+ * @package CurrencyConverter\Exchange
  */
-class ExchangeRateCollection implements \IteratorAggregate
+class RateCollection implements \IteratorAggregate
 {
     /**
-     * @var ExchangeRate[]
+     * @var Rate[]
      */
     private $exchangeRates = [];
 
     /**
-     * @param ExchangeRate $exchangeRate
+     * @param Rate $exchangeRate
      */
-    public function add(ExchangeRate $exchangeRate)
+    public function add(Rate $exchangeRate)
     {
         $this->exchangeRates[] = $exchangeRate;
     }

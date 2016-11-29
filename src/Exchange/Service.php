@@ -1,26 +1,30 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Exchange;
+
+use CurrencyConverter\Converter;
+use CurrencyConverter\Currency\Currency;
+use CurrencyConverter\Money\Money;
 
 /**
- * Class ExchangeService
- * @package CurrencyConverter
+ * Class Service
+ * @package CurrencyConverter\Exchange
  */
-class ExchangeService
+class Service
 {
     /**
-     * @var ExchangeRepository
+     * @var Repository
      */
     private $exchangeRepository;
     /**
-     * @var ExchangeRateCollection | ExchangeRate[]
+     * @var RateCollection | Rate[]
      */
     private $exchangeRateCollection;
 
     /**
      * ExchangeService constructor.
-     * @param ExchangeRepository $exchangeRepository
+     * @param Repository $exchangeRepository
      */
-    public function __construct(ExchangeRepository $exchangeRepository)
+    public function __construct(Repository $exchangeRepository)
     {
         $this->exchangeRepository = $exchangeRepository;
     }

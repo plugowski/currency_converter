@@ -1,11 +1,11 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Money;
 
 /**
- * Class MoneyValueException
- * @package CurrencyConverter
+ * Class InvalidValueException
+ * @package CurrencyConverter\Money
  */
-class MoneyValueException extends \Exception
+class InvalidValueException extends \Exception
 {
     /**
      * MoneyValueException constructor.

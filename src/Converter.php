@@ -1,6 +1,12 @@
 <?php
 namespace CurrencyConverter;
 
+use CurrencyConverter\Currency\Currency;
+use CurrencyConverter\Exchange\Rate;
+use CurrencyConverter\Exchange\RateCollection;
+use CurrencyConverter\Exchange\RateNotFoundException;
+use CurrencyConverter\Money\Money;
+
 /**
  * Class Converter
  * @package CurrencyConverter
@@ -8,15 +14,15 @@ namespace CurrencyConverter;
 class Converter
 {
     /**
-     * @var ExchangeRateCollection
+     * @var RateCollection
      */
     private $exchangeRateCollection;
 
     /**
      * Converter constructor.
-     * @param ExchangeRateCollection $exchangeRateCollection
+     * @param RateCollection $exchangeRateCollection
      */
-    public function __construct(ExchangeRateCollection $exchangeRateCollection)
+    public function __construct(RateCollection $exchangeRateCollection)
     {
         $this->exchangeRateCollection = $exchangeRateCollection;
     }
@@ -37,17 +43,17 @@ class Converter
 
     /**
      * @param string $code
-     * @return ExchangeRate
-     * @throws ExchangeRateNotFoundException
+     * @return Rate
+     * @throws RateNotFoundException
      */
     public function findExchangeRate($code)
     {
-        /** @var ExchangeRate $exchangeRate */
+        /** @var Rate $exchangeRate */
         foreach ($this->exchangeRateCollection as $exchangeRate) {
             if ($code === $exchangeRate->getCode()) {
                 return $exchangeRate;
             }
         }
-        throw new ExchangeRateNotFoundException($code);
+        throw new RateNotFoundException($code);
     }
 }

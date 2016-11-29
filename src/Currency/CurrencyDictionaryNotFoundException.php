@@ -1,14 +1,15 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Currency;
 
 /**
  * Class CurrencyDictionaryNotFoundException
- * @package CurrencyConverter
+ * @package CurrencyConverter\Currency
  */
 class CurrencyDictionaryNotFoundException extends \Exception
 {
     /**
      * CurrencyDictionaryNotFoundException constructor.
+     * @param string $locale
      */
     public function __construct($locale)
     {

@@ -1,11 +1,11 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Exchange;
 
 /**
  * Class ExchangeRateNotFoundException
- * @package CurrencyConverter
+ * @package CurrencyConverter\Exchange
  */
-class ExchangeRateNotFoundException extends \Exception
+class RateNotFoundException extends \Exception
 {
     /**
      * ExchangeRateNotFoundException constructor.

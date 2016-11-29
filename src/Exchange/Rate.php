@@ -1,11 +1,11 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Exchange;
 
 /**
- * Class ExchangeRate
- * @package CurrencyConverter
+ * Class Rate
+ * @package CurrencyConverter\Exchange
  */
-class ExchangeRate
+class Rate
 {
     /**
      * @var string

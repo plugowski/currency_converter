@@ -1,13 +1,15 @@
 <?php
-namespace CurrencyConverter;
+namespace CurrencyConverter\Money;
 
+use CurrencyConverter\Currency\Currency;
+use CurrencyConverter\Currency\CurrencyDictionary;
 use NumberSpeller\NumberSpeller;
 
 /**
- * Class MoneyFormatter
- * @package CurrencyConverter
+ * Class Formatter
+ * @package CurrencyConverter\Money
  */
-class MoneyFormatter
+class Formatter
 {
     /**
      * @var Money
