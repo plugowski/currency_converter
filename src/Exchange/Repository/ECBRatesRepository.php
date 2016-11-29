@@ -1,6 +1,7 @@
 <?php
 namespace CurrencyConverter\Exchange\Repository;
 
+use CurrencyConverter\Currency\Currency;
 use CurrencyConverter\Exchange\Rate;
 use CurrencyConverter\Exchange\RateCollection;
 use CurrencyConverter\Exchange\Repository;
@@ -16,9 +17,10 @@ class ECBRatesRepository implements Repository
     const API_URL = 'http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml';
 
     /**
+     * @param \DateTimeInterface $date
      * @return RateCollection | Rate[]
      */
-    public function getExchangeRates()
+    public function getExchangeRates(\DateTimeInterface $date)
     {
         $xml = simplexml_load_file(self::API_URL);
 
@@ -33,5 +35,22 @@ class ECBRatesRepository implements Repository
         }
 
         return $exchangeRateCollection;
+    }
+
+    /**
+     * @param Currency $currency
+     * @param \DateTimeInterface $date
+     * @return Rate
+     * @throws \Exception
+     */
+    public function getCurrencyRate(Currency $currency, \DateTimeInterface $date)
+    {
+        $xml = simplexml_load_file(self::API_URL);
+        foreach ($xml->Cube->Cube->Cube as $rate) {
+            if ((string)$rate['currency'] === $currency->getCode()) {
+                return new Rate((string)$rate['currency'], 1 / (double)$rate['rate']);
+            }
+        }
+        throw new \Exception('Currency not found.');
     }
 }

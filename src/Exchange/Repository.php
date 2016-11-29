@@ -1,6 +1,8 @@
 <?php
 namespace CurrencyConverter\Exchange;
 
+use CurrencyConverter\Currency\Currency;
+
 /**
  * Interface Repository
  * @package CurrencyConverter\Exchange
@@ -8,7 +10,15 @@ namespace CurrencyConverter\Exchange;
 interface Repository
 {
     /**
-     * @return RateCollection | Rate[]
+     * @param \DateTimeInterface $date
+     * @return Rate[]|RateCollection
      */
-    public function getExchangeRates();
+    public function getExchangeRates(\DateTimeInterface $date);
+
+    /**
+     * @param Currency $currency
+     * @param \DateTimeInterface $date
+     * @return Rate
+     */
+    public function getCurrencyRate(Currency $currency, \DateTimeInterface $date);
 }

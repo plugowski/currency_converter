@@ -32,12 +32,14 @@ class Service
     /**
      * @param Money $money
      * @param Currency $returnCurrency
+     * @param \DateTimeInterface | null $date
      * @return Money
      */
-    public function convert(Money $money, Currency $returnCurrency)
+    public function convert(Money $money, Currency $returnCurrency, \DateTimeInterface $date = null)
     {
         if (!isset($this->exchangeRateCollection)) {
-            $this->exchangeRateCollection = $this->exchangeRepository->getExchangeRates();
+            $date = is_null($date) ? new \DateTimeImmutable() : $date;
+            $this->exchangeRateCollection = $this->exchangeRepository->getExchangeRates($date);
         }
 
         $converter = new Converter($this->exchangeRateCollection);
@@ -47,12 +49,21 @@ class Service
     /**
      * @return array
      */
-    public function getExchangeTable()
+    public function getCurrentExchangeTable()
+    {
+        return $this->getExchangeTableForDay(new \DateTimeImmutable('now'));
+    }
+
+    /**
+     * @param \DateTimeInterface $date
+     * @return array
+     */
+    public function getExchangeTableForDay(\DateTimeInterface $date)
     {
         if (!isset($this->exchangeRateCollection)) {
-            $this->exchangeRateCollection = $this->exchangeRepository->getExchangeRates();
+            $this->exchangeRateCollection = $this->exchangeRepository->getExchangeRates($date);
         }
-        
+
         $exchangeRateTable = [];
         foreach ($this->exchangeRateCollection as $exchangeRate) {
             $exchangeRateTable[$exchangeRate->getCode()] = $exchangeRate->getValue();

@@ -5,7 +5,7 @@ namespace CurrencyConverter\Exchange;
  * Class Rate
  * @package CurrencyConverter\Exchange
  */
-class Rate
+class Rate implements \JsonSerializable
 {
     /**
      * @var string
@@ -41,5 +41,15 @@ class Rate
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @return array
+     */
+    function jsonSerialize()
+    {
+        return [
+            $this->getCode() => $this->getValue()
+        ];
     }
 }

@@ -5,7 +5,7 @@ namespace CurrencyConverter\Exchange;
  * Class Collection
  * @package CurrencyConverter\Exchange
  */
-class RateCollection implements \IteratorAggregate
+class RateCollection implements \IteratorAggregate, \JsonSerializable
 {
     /**
      * @var Rate[]
@@ -26,5 +26,17 @@ class RateCollection implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->exchangeRates);
+    }
+
+    /**
+     * @return array
+     */
+    function jsonSerialize()
+    {
+        $return = [];
+        foreach ($this->getIterator() as $element) {
+            $return[] = $element;
+        }
+        return $return;
     }
 }
